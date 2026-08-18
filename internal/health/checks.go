@@ -50,8 +50,10 @@ func (c Checker) Run(ctx context.Context) ([]Result, error) {
 			publish(result)
 		}()
 	}
-	group.Wait()
-	close(channel)
+	go func() {
+		group.Wait()
+		close(channel)
+	}()
 	healthy := true
 	for result := range channel {
 		results = append(results, result)
